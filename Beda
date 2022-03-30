@@ -1,0 +1,160 @@
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
+#include <ctime>
+#include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
+using namespace std;
+
+void nomer2(int a)//адача номер 2 вариант б
+{ int b=a;
+    int c;
+    for (int i = 1; i <b ; i=i*2) {
+        c++;
+    }
+    c++;//нашли колличество цыфр в в двоичной записи
+
+    char* arr = new char[c];
+
+    for (int i = 0; i<c ; ++i) {//переводим в двоичную систему
+        if (b%2==1){
+            arr[i]=0x31;
+        }
+        else
+        {
+            arr[i]=0x30;
+        }
+        b=b/2;
+    }
+    ofstream fout("C:\\tyt_tekst\\file_s_ciferkami.txt");//записываем в файл
+    for (int i = 0; i < c; ++i) {
+        fout << arr[i];
+    }
+    fout.close();
+}
+
+void elka_nomer4 (int dlinna_osnovania){//ёлочка мокушкой вправо
+
+int n=0;
+    if (dlinna_osnovania%2==1){
+        dlinna_osnovania++;
+        n++;
+    }
+   int a=1;
+    //верхняя половина
+        for (int j = 0; j <dlinna_osnovania/2 ; ++j) {
+            a=j+1;
+
+         for (int k = 0; k < a; ++k) {
+             cout<<"0";
+         }
+         cout<<endl;
+    }
+
+
+
+
+    if (n==1){//роверка на макушку
+        dlinna_osnovania--;
+    }
+  int b=dlinna_osnovania/2;
+    for (int i = 0; i < dlinna_osnovania/2 ; ++i) {
+        for (int j = 0; j < b; ++j) {
+            cout<<"0";
+        }
+        b--;
+        cout<<endl;
+    }
+
+}
+
+
+
+int nomer5(int* a,int kollichestvo_el1,int kollichestvo_el2 ){
+   int b= kollichestvo_el1;
+    int c= kollichestvo_el2;
+    float sr1=0;
+    float sr2=0;
+    int *p=a;
+    for (int i = 0; i < b; ++i) {
+        sr1=sr1+a[0,i];
+    }
+    for (int i = 0; i < c; ++i) {
+        sr2=sr2+a[1,i];
+    }
+    sr1=sr1/b;
+    sr2=sr2/c;
+    return(sr1,sr2);
+
+}
+
+
+
+
+
+//задача 6
+struct Node{
+    Node* next;
+    Node* prew;
+    struct Data*d{
+    };
+
+};
+class linkedlist{
+private:
+    Node* Head;
+    Node* Tail;
+public:
+    void pushb(const Data*d );//существует в тетради
+     void  zapis_skonca();
+    void vstavim(const struct Data*d,int n);
+    void curnode();//уществует в тетради
+    void delite_node();
+};
+void linkedlist::vstavim(const struct Data*d,int n) {//адача 7
+
+    for (int i = 0; i < n; ++i) {
+        curnode=curnode->next;//нашли нужный узелл
+
+    }
+    pushb();//не нашел в тетради как создать не привязанный елемент
+    //потом не забыть предпоследний элемент сделать последним
+    Node temp->prew=Tail->prew->next;
+    Node temp->d=Tail->d;//скопировали
+    delite_node();//стираем хвост
+    Node* temp2->next=temp->prew;//запомнили ссылку на наш элемент
+    Node* temp->next=curnode->next;
+    Node* temp->prew=curnode->next->prew;//теперь наш элемент вставлен на половину он указывает на окружающие его элементы
+    curnode->next=temp2->prew;
+    curnode->next->prew=temp2->prew;//теперь и окружающие элементы указывают на наш(вроде бы...)
+
+
+
+
+}
+
+
+void linkedlist::zapis_skonca() {//задача 6
+    ofstream fout("C:\\tyt_tekst\\file_s_ciferkami.txt");
+    curnode=Tail;
+    while (curnode->prew!= nullptr){
+        fout<<curnode->Data<<"\n";
+
+curnode=curnode->prew;//этот цикл не запишет ХЭАД так что отдельно запишем его
+    }
+    fout<<curnode->Data<<"\n";
+
+}
+
+
+
+
+
+
+int main() {
+
+    elka_nomer4(5);
+
+    return 0;
+}
