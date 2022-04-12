@@ -1,64 +1,292 @@
 #include <iostream>
-#include <cstdlib>
-#include <cstdio>
-#include <ctime>
 #include <fstream>
-#include <stdio.h>
-#include <stdlib.h>
+#include <algorithm>
+#include <list>
+#include <utility>
+#include <functional>
+#include <iterator>
+#include <string>
+
 using namespace std;
-
-void nomer2(int a)//адача номер 2 вариант б
-{ int b=a;
-    int c;
-    for (int i = 1; i <b ; i=i*2) {
-        c++;
-    }
-    c++;//нашли колличество цыфр в в двоичной записи
-
-    char* arr = new char[c];
-
-    for (int i = 0; i<c ; ++i) {//переводим в двоичную систему
-        if (b%2==1){
-            arr[i]=0x31;
-        }
-        else
-        {
-            arr[i]=0x30;
-        }
-        b=b/2;
-    }
-    ofstream fout("C:\\tyt_tekst\\file_s_ciferkami.txt");//записываем в файл
-    for (int i = 0; i < c; ++i) {
-        fout << arr[i];
-    }
-    fout.close();
+//вспомогательные функции и структуры для задач 1-7
+typedef list< pair<string,int > > list_t;
+list_t listPair;
+typedef list< pair<string,int  > > list_s;
+list_s listS;
+void printStars(list_t::reference x)
+{
+    cout << x.first << " " << x.second << endl;
 }
+struct Node {
+    int number; //данные
+    Node *next; //указатель на следующий узел
+    Node *prev; //указатель на предыдущий
+};
+class doubleList {
+    Node *head;
+    Node *tail;
+public:
+    doubleList();
+    void addFirst(int number);
+    void addLast(int number);
+    void delTail();
+    void delHead();
+    void sortingList();
+    void swap(int &a, int &b);
+    void showList() const;
+    Node * takehead();
+};
+doubleList :: doubleList() {
+    head = tail = NULL;
+}
+void doubleList :: addFirst(int number) {
+    Node *buf  = new Node;
+    buf -> number = number;
+    if (!head) {
+        buf -> next = tail;
+        tail = buf;
+    }
+    else {
+        buf -> next = head;
+        head -> prev = buf;
+    }
+    head = buf;
+    head -> prev = NULL;
 
-void elka_nomer4 (int dlinna_osnovania){//ёлочка мокушкой вправо
+}//Добавление узла в начало
+void doubleList :: addLast(int number) {
+    Node *buf = new Node;
+    buf -> number = number;
+    if (!head) {
+        buf -> next = tail;
+        head = buf;
+        buf -> prev = NULL;
+    }
+    else {
+        buf -> next = tail -> next;
+        buf -> prev = tail;
+        tail -> next = buf;
+    }
+    tail = buf;
+}//Добавление узла в конец
+void doubleList :: showList() const {
+    if (head) {
+        Node *buf = head;
+        while (buf) {
+            cout << buf ->number << " ";
+            buf = buf -> next;
+        }
+        cout << endl;
+    }
+    else cout << "List is empty " << endl;
+}//Пройти по списку и вывести все элементы
+Node * doubleList :: takehead(){
+    
+    return (head);
+} 
 
+
+//функции для задач с 1-7
+
+void nomer1()
+{
+    string slova="Peter Piper picked a peck of pickled peppers A peck of pickled peppers Peter Piper picked If Peter Piper picked a peck of pickled peppers Where's the peck of pickled peppers Peter Piper picked ";
+char a;
+int l=0;
+int k=0;
 int n=0;
-    if (dlinna_osnovania%2==1){
+cout<<"Входные данные: Peter Piper picked a peck of pickled peppers A peck of pickled peppers Peter Piper picked If Peter Piper picked a peck of pickled peppers Where's the peck of pickled peppers Peter Piper picked ";
+cout<<endl;
+string zap;
+    a=slova[l];
+    while (a!='\0'){
+        a=slova[l];
+        l++;
+        if(a=='\0')
+        {
+            break;
+        }
+        zap=a;
+        for (auto iter = listPair.begin(); iter != listPair.end(); ++iter) {
+            if (iter->first == zap) {
+                iter->second++;
+                k++;
+            }
+        }
+        if (k == 0 || n == 0) {
+            listPair.push_back(make_pair(zap, 1));
+            n = 2;
+        }
+        k = 0;
+        n++;
+
+    }
+    for_each(listPair.begin(), listPair.end(), std::ref(printStars));
+cout<<endl;
+
+}
+void nomer1(string slova)
+{
+   // string slova="Peter Piper picked a peck of pickled peppers A peck of pickled peppers Peter Piper picked If Peter Piper picked a peck of pickled peppers Where's the peck of pickled peppers Peter Piper picked ";
+    char a;
+    int l=0;
+    int k=0;
+    int n=0;
+    cout<<"Входные данные: Peter Piper picked a peck of pickled peppers A peck of pickled peppers Peter Piper picked If Peter Piper picked a peck of pickled peppers Where's the peck of pickled peppers Peter Piper picked ";
+    cout<<endl;
+    string zap;
+    a=slova[l];
+    while (a!='\0'){
+        a=slova[l];
+        l++;
+        if(a=='\0')
+        {
+            break;
+        }
+        zap=a;
+        for (auto iter = listPair.begin(); iter != listPair.end(); ++iter) {
+            if (iter->first == zap) {
+                iter->second++;
+                k++;
+            }
+        }
+        if (k == 0 || n == 0) {
+            listPair.push_back(make_pair(zap, 1));
+            n = 2;
+        }
+        k = 0;
+        n++;
+
+    }
+    for_each(listPair.begin(), listPair.end(), std::ref(printStars));
+    cout<<endl;
+
+}
+int nomer2(int a)
+{   //ofstream fout("C:\\tyt_tekst\\file_s_ciferkami.txt");
+    for (int i = 31; i >= 0; --i)
+    {
+        cout << ((a >> i) & 1);
+        //fout << ((a >> i) & 1);
+    }
+    cout<<endl;
+    for (int i = 0; i < 32; ++i) {
+        cout << ((a  & (1<<i))>>i);
+        //fout << ((a  & (1<<i))>>i);
+    }
+    //fout.close();
+
+    cout<<endl;
+    cout<<endl;
+}
+void nomer3(char* line){
+    char temp[32];
+    int binTemp[32];
+    int count=0;
+    for(int i=0;i<32;i++){
+        binTemp[i]=0;
+    }
+    char* numTemp=new char[4];
+    for(int i=0,i1=0;i<159;i=i+5,i1++) {
+
+        for (int j = 0; j < 4; j++) {
+            numTemp[j] = line[i + j];
+            cout<<numTemp[j];
+        }
+        if (numTemp[0]=='0' && numTemp[1]=='x' && numTemp[2]=='3' && numTemp[3]=='0') {
+            cout<<"+";
+            binTemp[i1] = 0;
+        }
+        if (numTemp[0]=='0' && numTemp[1]=='x' && numTemp[2]=='3' && numTemp[3]=='1') {
+            cout << "-";
+            binTemp[i1] = 1;
+        }
+        if(numTemp[0]!='0'){
+        }
+    }
+
+    for(int i=0;i<32;i=i+4){
+        int binNum=8*binTemp[i+3]+4*binTemp[i+2]+2*binTemp[i+1]+1*binTemp[i];
+        switch (binNum) {
+            case 0:{
+                temp[count]='0';
+            }break;
+            case 1:{
+                temp[count]='1';
+            }break;
+            case 2:{
+                temp[count]='2';
+            }break;
+            case 3:{
+                temp[count]='3';
+            }break;
+            case 4:{
+                temp[count]='4';
+            }break;
+            case 5:{
+                temp[count]='5';
+            }break;
+            case 6:{
+                temp[count]='6';
+            }break;
+            case 7:{
+                temp[count]='7';
+            }break;
+            case 8:{
+                temp[count]='8';
+            }break;
+            case 9:{
+                temp[count]='9';
+            }break;
+            case 10:{
+                temp[count]='A';
+            }break;
+            case 11:{
+                temp[count]='B';
+            }break;
+            case 12:{
+                temp[count]='C';
+            }break;
+            case 13:{
+                temp[count]='D';
+            }break;
+            case 14:{
+                temp[count]='E';
+            }break;
+            case 15:{
+                temp[count]='F';
+            }break;
+        }
+        count++;
+    }
+    temp[8]='x';
+    temp[9]='0';
+    for(int i=9;i>=0;i--){
+
+        cout<<temp[i];
+    }
+}
+void elka_nomer4 (int dlinna_osnovania) {//ёлочка мокушкой вправо
+
+    int n = 0;
+    if (dlinna_osnovania % 2 == 1) {
         dlinna_osnovania++;
         n++;
     }
-   int a=1;
+    int a = 1;
     //верхняя половина
-        for (int j = 0; j <dlinna_osnovania/2 ; ++j) {
-            a=j+1;
+    for (int j = 0; j < dlinna_osnovania / 2; ++j) {
+        a = j + 1;
 
-         for (int k = 0; k < a; ++k) {
-             cout<<"0";
-         }
-         cout<<endl;
+        for (int k = 0; k < a; ++k) {
+            cout << "0";
+        }
+        cout << endl;
     }
-
-
-
-
     if (n==1){//роверка на макушку
         dlinna_osnovania--;
     }
-  int b=dlinna_osnovania/2;
+    int b=dlinna_osnovania/2;
     for (int i = 0; i < dlinna_osnovania/2 ; ++i) {
         for (int j = 0; j < b; ++j) {
             cout<<"0";
@@ -68,93 +296,476 @@ int n=0;
     }
 
 }
+list<int> nomer5(int** a,int dperv,int dvtor){
+    double k=0;
 
-
-
-int nomer5(int* a,int kollichestvo_el1,int kollichestvo_el2 ){
-   int b= kollichestvo_el1;
-    int c= kollichestvo_el2;
-    float sr1=0;
-    float sr2=0;
-    int *p=a;
-    for (int i = 0; i < b; ++i) {
-        sr1=sr1+a[0,i];
+    list<double> srznach;
+    for (int i = 0; i < dperv; ++i) {
+        for (int j = 0; j < dvtor; ++j) {
+            k=k+a[i][j];
+        }
+       srznach.push_back(k/dvtor) ;
+        k=0;
     }
-    for (int i = 0; i < c; ++i) {
-        sr2=sr2+a[1,i];
-    }
-    sr1=sr1/b;
-    sr2=sr2/c;
-    return(sr1,sr2);
 
+    copy(srznach.begin(),srznach.end(),ostream_iterator<double>(cout," "));
+    cout<<endl;
+
+}
+void nomer6(Node* head)
+{
+    Node* curnode=head;
+    while(curnode->next!= nullptr)
+    {
+        cout<<curnode->number<<" ";
+        curnode=curnode->next;
+    }
+    cout<<curnode->number<<" ";
+    cout<<endl;
+    cout<<curnode->number<<" ";
+    while(curnode->prev!= nullptr)
+    {
+        curnode=curnode->prev;
+        cout<<curnode->number<<" ";
+
+    }
+}
+void nomer7(Node* head,Node* el,int nomer)
+{
+Node* curnode=head;
+
+    for (int i = 0; i < nomer; ++i) {
+     curnode=curnode->next;
+    }
+    el->next=curnode->next;
+    el->prev=curnode;
+    curnode->next->prev=el;
+    curnode->next=el;
+}
+
+
+void nomer1drugoe_epravilnoponalzadanie(){
+    char buff[100];
+    char* dubl;
+    int l=0;
+    string zap;
+    int counter = 0;
+    char ch='a';
+    int k=0;
+    int n=0;
+    string slova="Peter Piper picked a peck of pickled peppers A peck of pickled peppers Peter Piper picked If Peter Piper picked a peck of pickled peppers Where's the peck of pickled peppers Peter Piper picked ";
+
+    ifstream fin("C:\\tyt_tekst\\nomer 1.txt");
+    while (!fin.eof())
+    {
+
+        //ch = fin.get();
+        ch=slova[l];
+        l++;
+        if (ch=='\0')
+        { break;}
+        buff[counter++] = ch;
+        if (ch==' ') {
+            dubl = new char[counter];
+            for (int i = 0; i < counter; ++i) {
+                dubl[i] = buff[i];
+            }
+            zap = dubl;
+            delete[] dubl;
+            counter = 0;
+            for (auto iter = listPair.begin(); iter != listPair.end(); ++iter) {
+                if (iter->first == zap) {
+                    iter->second++;
+                    k++;
+                }
+            }
+            if (k == 0 || n == 0) {
+                listPair.push_back(make_pair(zap, 1));
+                n = 2;
+            }
+            k = 0;
+            n++;
+        }
+    }
+    for_each(listPair.begin(), listPair.end(), std::ref(printStars));
+    //fin.close();
+}
+void nomer6cherezlist(list<int>&a )
+{
+    copy(a.begin(),a.end(),ostream_iterator<int>(cout," "));
+    cout<<endl;
+    list <int> :: iterator it = a.end();
+    it--;
+    while(it!=a.begin())
+    {
+        cout<<(*it) << " ";
+        it--;
+    }
+    cout<<(*it) << " ";
 }
 
 
 
-
-
-//задача 6
-struct Node{
-    Node* next;
-    Node* prew;
-    struct Data*d{
-    };
-
-};
-class linkedlist{
+//задача 8
+class student{
 private:
-    Node* Head;
-    Node* Tail;
+    string fio;
+    list_s listS;
 public:
-    void pushb(const Data*d );//существует в тетради
-     void  zapis_skonca();
-    void vstavim(const struct Data*d,int n);
-    void curnode();//уществует в тетради
-    void delite_node();
+    student();
+    void name(string);
+    void add_predmet(string);
+    void add_otmetka(string,int);
+    double sr_otc(string);
+    void info();
+
 };
-void linkedlist::vstavim(const struct Data*d,int n) {//адача 7
+ student::student(){
+ }
 
-    for (int i = 0; i < n; ++i) {
-        curnode=curnode->next;//нашли нужный узелл
+
+void student::add_predmet(string pr)
+{   int k = 0;
+    for (auto iter = listS.begin(); iter != listS.end(); ++iter) {
+        if (iter->first == pr) {
+
+            k++;
+            break;
+        }
 
     }
-    pushb();//не нашел в тетради как создать не привязанный елемент
-    //потом не забыть предпоследний элемент сделать последним
-    Node temp->prew=Tail->prew->next;
-    Node temp->d=Tail->d;//скопировали
-    delite_node();//стираем хвост
-    Node* temp2->next=temp->prew;//запомнили ссылку на наш элемент
-    Node* temp->next=curnode->next;
-    Node* temp->prew=curnode->next->prew;//теперь наш элемент вставлен на половину он указывает на окружающие его элементы
-    curnode->next=temp2->prew;
-    curnode->next->prew=temp2->prew;//теперь и окружающие элементы указывают на наш(вроде бы...)
+    if (k==0)
+    {
 
-
-
-
-}
-
-
-void linkedlist::zapis_skonca() {//задача 6
-    ofstream fout("C:\\tyt_tekst\\file_s_ciferkami.txt");
-    curnode=Tail;
-    while (curnode->prew!= nullptr){
-        fout<<curnode->Data<<"\n";
-
-curnode=curnode->prew;//этот цикл не запишет ХЭАД так что отдельно запишем его
+        listS.push_back(make_pair(pr,0));
     }
-    fout<<curnode->Data<<"\n";
-
 }
+void student::add_otmetka(string pr,int otc)
+{
+    for (auto iter = listS.begin(); iter != listS.end(); ++iter) {
+        if (iter->first == pr) {
+            iter->second=iter->second*10+otc;
+
+            break;
+        }
+
+    }
+}
+double student::sr_otc(string pr) {
+    for (auto iter = listS.begin(); iter != listS.end(); ++iter) {
+        if (iter->first == pr) {
+            int k=1;
+            double s=0;
+            int ch=iter->second;
+            for (int i = iter->second; i >0 ;i=i/10 ) {
+                k++;
+                s=s+ch%10;
+                ch=ch/10;
+            }
+                k--;
+            cout<<endl<<s/k;
+
+            break;
+        }
+
+    }
+
+
+ }
+void student::name(string a){
+     fio=a;
+ }
+void student::info(){
+     cout<<fio<<endl;
+    for (auto iter = listS.begin(); iter != listS.end(); ++iter) {
+        cout<<iter->first<<" ";
+        int ch=iter->second;
+        for (int i = iter->second; i >0 ;i=i/10 ) {
+
+            cout<<ch%10<<" ";
+            ch=ch/10;
+        }
+        cout<<endl;
+    }
+ }
 
 
 
 
+int main()
+{
+    system("chcp 65001");//русский язык
+    int k=0;
+
+    while (k!=-1) {
+        cout<<"1) Введите номер задачи если хотите ее лично проверить"<<endl;
+        cout<<"2) Введите номер задачи два раза без пробел если хотите проверить задачу по заранее введенным данным"<<endl;
+        cout<<"Пример: 22 выведт пример задачи номер 2 с исходными данными" <<endl;
+        cout<<"3)Введите 0 если хотите увидеть решение всех задач с заранее введенными данными"<<endl;
+        cout<<"Введите -1 если хотите закончить проверку програмы" <<endl;
+        cin>>k;
+        if (k == 11 || k == 0) {
+            cout<<"Номер 1"<<endl;
+            nomer1();
+            cout<<endl<<endl;
+        }//проверка номер 1
+        if (k == 22 || k == 0) {
+            cout<<"Номер 3"<<endl;
+            cout<<"Входные данные: 345668799";
+            cout<<endl;
+            nomer2(345668799);
+            cout<<endl<<endl;
+        }//проверка номер 2
+        if (k == 44 || k == 0) {
+            cout<<"Номер 4"<<endl;
+            cout<<"Входные данные: 7 - длинна основания";
+            cout<<endl;
+            elka_nomer4(6);
+
+            cout<<endl<<endl;
+        }//проверка номер 4
+        if (k == 66 || k == 0) {
+            doubleList ob;
+            cout<<"Номер 6"<<endl;
+            cout<<"Входные данные: 1 3 5 7 9 (эти значения хранятся в элементах списка)";
+            cout<<endl;
+            int a_i = 1;
+
+            while (a_i != 11) {
+
+                if (a_i) {
+                    ob.addFirst(a_i);
+                    a_i=a_i+2;
+
+                } else break;
+            }
+
+            nomer6(ob.takehead());
+            cout<<endl;
+            cout<<endl<<endl;
+        }//проверка номер 6
+        if (k == 77 || k == 0) {
+            cout<<"Номер 7"<<endl;
+            cout<<"Входные данные: 1 3 5 7 9 - вставляем 0 на 3 позицию  ";
+            cout<<endl;
+            doubleList ob;
+            int a_i = 1;
+            //cout << "Enter elements" << endl;
+            while (a_i != 11) {
+
+                if (a_i) {
+                    ob.addLast(a_i);
+                    a_i=a_i+2;
+
+                } else break;
+            }
+            ob.showList();
+            Node *el = new Node;
+            int b=0;
+            //cin >> b;
+            el->number = b;//новый элемнт котоый вставляется по номеру
+            int a=3;
+            //cin >> a;
+            a--;
+            a--;
+            nomer7(ob.takehead(), el, a);
+            ob.showList();
+            cout<<endl<<endl;
+        }//проверка номер 7
+        if (k == 88 || k == 0||k==8) {
+            cout<<"Номер 8"<<endl;
+            cout<<"Входные данные: студент Vasiliev Konstantin. 3 предмета с отценками 1)Матан 5 3 4. 2)Инжа 5 5 3. 3)Инфа 3 4 4 .";
+            cout<<endl;
+            student Vasiliev;
+            string pt1 = "matan";
+            string pt2 = "inja";
+            string pt3 = "infa";
+            string name = "Vasiliev Konstantin";
+            Vasiliev.add_predmet(pt1);
+            Vasiliev.add_predmet(pt2);
+            Vasiliev.add_predmet(pt3);
+            Vasiliev.add_otmetka(pt1, 5);
+            Vasiliev.add_otmetka(pt1, 3);
+            Vasiliev.add_otmetka(pt1, 4);
+            Vasiliev.add_otmetka(pt2, 5);
+            Vasiliev.add_otmetka(pt2, 5);
+            Vasiliev.add_otmetka(pt2, 3);
+            Vasiliev.add_otmetka(pt3, 3);
+            Vasiliev.add_otmetka(pt3, 4);
+            Vasiliev.add_otmetka(pt3, 4);
+            cout<<"cредние баллы по предметам"<<endl;
+            cout<<"Матан";
+            Vasiliev.sr_otc(pt1);
+            cout<<endl<<"Инжа";
+            Vasiliev.sr_otc(pt2);
+            cout<<endl<<"Инфа";
+            Vasiliev.sr_otc(pt3);
+
+            cout<<endl;
+            cout<<endl;
+            cout<<"Информация о студенте ";
+            Vasiliev.name(name);
+            Vasiliev.info();
+            cout<<endl<<endl;
+        }//проверка номер 8
+        if (k == 55 || k == 0) {
+            cout<<"Номер 5"<<endl;
+            cout<<"Входные данные: Массив 3 на 3 значения - 1 2 3| 4 5 6 | 7 8 9";
+            cout<<endl;
+            int **dinamic_array2 = new int *[3];
+            for (int i = 0; i < 3; i++) {
+                dinamic_array2[i] = new int[i + 1];
+            }
+            for (int i = 0; i < 3; i++) {
 
 
-int main() {
+                for (int j = 0; j < 3; j++) {
+                    dinamic_array2[i][j]=j+3*i+1;
 
-    elka_nomer4(5);
+                }
+            }
+            list<int> a = nomer5(dinamic_array2, 3, 3);
+            for (int i = 0; i < 3; ++i) {
+                delete[] dinamic_array2[i];
+            }
+            delete[] dinamic_array2;
+            cout<<"Скорее всего программа ломается из за утечки памяти,причину пока не нашел. Если хотите продолжить проверять другие программы запустите приложение заново";
+            cout<<endl<<endl;
+        }//проверка номер 5
+        if (k == 33 || k == 0) {
+            cout<<"Номер 3"<<endl;
+            char *a = "0x31 0x31 0x30";
+            nomer3(a);
+            cout<<"скорее всего ломается из-за распознования кирилицы, до подключения этой функции работало"<<endl<<endl;
+        }//проверка номер 3
 
+        if (k==1)
+        {
+            cout<<"Номер 1"<<endl;
+            string a;
+            cout<<"Введите символы";
+            cin>>a;
+            nomer1(a);
+        }
+        if (k==2)
+        { cout<<"Номер 2"<<endl;
+            int a;
+            cout<<"Введите число";
+            cin>>a;
+            nomer2(a);
+        }
+        if (k==3)
+        {cout<<"Номер 3"<<endl;
+            char* a;
+            cout<<"Введите символы";
+            cin>>a;
+            nomer3(a);
+            cout<<"скорее всего ломается из-за распознования кирилицы, до подключения этой функции работало"<<endl<<endl;
+        }
+        if (k==4)
+        {cout<<"Номер 4"<<endl;
+            int a;
+            cout<<"Введите длинну основания";
+            cin>>a;
+            elka_nomer4(a);
+        }
+        if (k==5)
+        {cout<<"Номер 5"<<endl;
+            int b,c;
+            cout<<"Введите размер двумерного массива";
+            cin>>b>>c;
+            int d;
+            int **dinamic_array2 = new int *[b];
+            for (int i = 0; i < b; i++) {
+                dinamic_array2[i] = new int[i + 1];
+            }
+            for (int i = 0; i < b; i++) {
+
+
+                for (int j = 0; j < c; j++) {
+                    cout<<"Введите элемент";
+                    cin>>d;
+                    dinamic_array2[i][j]=d;
+
+                }
+            }
+            list<int> a = nomer5(dinamic_array2, b, c);
+            for (int i = 0; i < b; ++i) {
+                delete[] dinamic_array2[i];
+            }
+            delete[] dinamic_array2;
+            cout<<"Скорее всего программа ломается из за утечки памяти,причину пока не нашел. Если хотите продолжить проверять другие программы запустите приложение заново";
+            cout<<endl<<endl;
+        }
+        if (k==6)
+        {cout<<"Номер 1"<<endl;
+            int a;
+
+            doubleList ob;
+
+            cout<<endl;
+            int a_i = 1;
+
+            while (a_i != 11) {
+                cout<<"Введите цифру, если хотите закончить добавление элементов, введите 0";
+                cin>>a_i;
+                if (a_i) {
+                    ob.addFirst(a_i);
+
+
+                } else break;
+            }
+
+            nomer6(ob.takehead());
+            cout<<endl;
+            cout<<endl<<endl;
+        }
+        if (k==7)
+        {
+            cout<<"Номер 7"<<endl;
+
+            cout<<endl;
+            doubleList ob;
+            int a_i = 1;
+
+            while (a_i != 0) {
+                cout << "Введите цифру, если хотите закончить добавление элементов, введите 0" << endl;
+                cin>>a_i;
+                if (a_i) {
+                    ob.addLast(a_i);
+
+
+                } else break;
+            }
+            ob.showList();
+            Node *el = new Node;
+            int b=0;
+            cout << "Введите цифру элемента который хотите вставить" << endl;
+            cin >> b;
+            el->number = b;//новый элемнт котоый вставляется по номеру
+            int a=3;
+            cout << "Введите номер позиции на которую хотите вставить элемент" << endl;
+            cin >> a;
+            a--;
+            a--;
+            nomer7(ob.takehead(), el, a);
+            ob.showList();
+            cout<<endl<<endl;
+        }
+
+
+        if (k == 19) {
+            nomer1drugoe_epravilnoponalzadanie();
+        }//проверка номер 1 с неправильным условие (считает слова(почти корректно))
+        if (k == 19) {
+            list<int> this_list;
+            this_list.push_back(3);
+            this_list.push_back(4);
+            this_list.push_back(5);
+            this_list.push_back(6);
+            this_list.push_back(7);
+            this_list.push_back(8);
+            nomer6cherezlist(this_list);
+        }//проверка номер 6 через лист
+    }
     return 0;
-}
